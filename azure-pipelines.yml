@@ -46,11 +46,11 @@ stages:
       - job: Windows
         pool:
           ${{ if eq(variables['System.TeamProject'], 'public') }}:
-            name: NetCorePublic-Pool
-            queue: BuildPool.Server.Amd64.VS2019.Open
+            name: NetCore1ESPool-Public
+            demands: ImageOverride -equals Build.Server.Amd64.VS2019.Open
           ${{ if ne(variables['System.TeamProject'], 'public') }}:
-            name: NetCoreInternal-Pool
-            queue: BuildPool.Server.Amd64.VS2019
+            name: NetCore1ESPool-Internal
+            demands: ImageOverride -equals Build.Server.Amd64.VS2019
         variables:
           
 
@@ -97,10 +97,10 @@ stages:
             artifactType: Container
             parallel: true
 
-      - job: Ubuntu_16_04
-        displayName: 'Ubuntu 16.04'
+      - job: Ubuntu_20_04
+        displayName: 'Ubuntu 20.04'
         pool:
-          vmImage: ubuntu-16.04
+          vmImage: ubuntu-20.04
         variables:
         - name: _SignType
           value: none
@@ -133,7 +133,7 @@ stages:
       - job: OSX_10_14
         displayName: 'OSX'
         pool:
-          vmImage: macOS-10.14
+          vmImage: macOS-11
         variables:
         - name: _SignType
           value: none

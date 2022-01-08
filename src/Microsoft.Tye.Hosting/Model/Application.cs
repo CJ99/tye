@@ -12,19 +12,27 @@ namespace Microsoft.Tye.Hosting.Model
 {
     public class Application
     {
-        public Application(FileInfo source, Dictionary<string, Service> services, ContainerEngine containerEngine)
+        public Application(string name, FileInfo source, int? dashboardPort, Dictionary<string, Service> services, ContainerEngine containerEngine)
         {
+            Name = name;
             Source = source.FullName;
             ContextDirectory = source.DirectoryName!;
             Services = services;
             ContainerEngine = containerEngine;
+            DashboardPort = dashboardPort;
         }
+
+        public string Id { get; } = Guid.NewGuid().ToString();
+
+        public string Name { get; }
 
         public string Source { get; }
 
         public string ContextDirectory { get; }
 
         public ContainerEngine ContainerEngine { get; set; }
+
+        public int? DashboardPort { get; set; }
 
         public Dictionary<string, Service> Services { get; }
 

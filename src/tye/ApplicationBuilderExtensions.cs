@@ -151,6 +151,11 @@ namespace Microsoft.Tye
                     replicas = function.Replicas;
                     liveness = null;
                     readiness = null;
+
+                    foreach (var entry in function.EnvironmentVariables)
+                    {
+                        env.Add(entry.ToHostingEnvironmentVariable());
+                    }
                 }
                 else
                 {
@@ -180,7 +185,7 @@ namespace Microsoft.Tye
                     });
                 }
 
-                services.Add(service.Name, new Service(description));
+                services.Add(service.Name, new Service(description, service.Source));
             }
 
             // Ingress get turned into services for hosting
@@ -207,13 +212,14 @@ namespace Microsoft.Tye
                         Name = binding.Name,
                         Port = binding.Port,
                         Protocol = binding.Protocol,
+                        IPAddress = binding.IPAddress,
                     });
                 }
 
-                services.Add(ingress.Name, new Service(description));
+                services.Add(ingress.Name, new Service(description, ServiceSource.Host));
             }
 
-            return new Application(application.Source, services, application.ContainerEngine) { Network = application.Network };
+            return new Application(application.Name, application.Source, application.DashboardPort, services, application.ContainerEngine) { Network = application.Network };
         }
 
         public static Tye.Hosting.Model.EnvironmentVariable ToHostingEnvironmentVariable(this EnvironmentVariableBuilder builder)
